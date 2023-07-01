@@ -1,4 +1,5 @@
 from app.models.main import CarRental
+from app.models.main import RentCarException
 import pytest
 
 
@@ -25,6 +26,10 @@ class TestCompactType:
     def test_category_true_after_rent(self, customer_details):
         self.car_rental.rent(**customer_details)
         assert self.car_rental.car_category_rented["Compact"]
+
+    def test_rent_compact_again(self):
+        with pytest.raises(RentCarException):
+            self.car_rental = CarRental(car_category="Compact")
 
     def test_km_travelled(self, customer_details):
         self.car_rental.rent(**customer_details)
