@@ -4,10 +4,8 @@ import pytest
 
 class TestCompactType:
 
-    @staticmethod
-    @pytest.fixture
-    def car_rental():
-        return CarRental(car_category="Compact")
+    def setup_class(self):
+        self.car_rental = CarRental(car_category="Compact")
 
     @staticmethod
     @pytest.fixture
@@ -16,26 +14,22 @@ class TestCompactType:
                 "car_mileage_before": 5,
                 "date_rented": "2023-07-01"}
 
-    def test_create_car_rental(self, car_rental):
-        assert car_rental.car_category == "Compact"
+    def test_create_car_rental(self):
+        assert self.car_rental.car_category == "Compact"
 
-    def test_rent_params(self,car_rental, customer_details):
-        car_rental.rent(**customer_details)
+    def test_rent_params(self, customer_details):
+        self.car_rental.rent(**customer_details)
         for param, value in customer_details.items():
-            assert getattr(car_rental, param) == value
+            assert getattr(self.car_rental, param) == value
 
-    def test_category_true_after_rent(self, car_rental, customer_details):
-        car_rental.rent(**customer_details)
-        assert car_rental.car_category_rented["Compact"]
+    def test_category_true_after_rent(self, customer_details):
+        self.car_rental.rent(**customer_details)
+        assert self.car_rental.car_category_rented["Compact"]
 
-    def test_km_travelled(self, car_rental, customer_details):
-        car_rental.rent(**customer_details)
-        assert car_rental.km_travelled(10) == 8.045
+    def test_km_travelled(self, customer_details):
+        self.car_rental.rent(**customer_details)
+        assert self.car_rental.km_travelled(10) == 8.045
 
-    def test_return(self, car_rental, customer_details):
-        car_rental.rent(**customer_details)
-        assert car_rental.return_car(10, "2023-8-01") == 310
-
-
-
-
+    def test_return(self, customer_details):
+        self.car_rental.rent(**customer_details)
+        assert self.car_rental.return_car(10, "2023-8-01") == 310

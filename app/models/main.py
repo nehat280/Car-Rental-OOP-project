@@ -24,7 +24,10 @@ class CarRental:
     _per_km_price = 5
 
     def __init__(self, car_category):
+        if CarRental.car_category_rented.get(car_category, True):
+            raise RentCarException(f'Car of {car_category} cannot be rented')
         self.car_category = car_category
+        CarRental.car_category_rented[self.car_category] = True
 
     @staticmethod
     def get_date_obj(date):
@@ -32,10 +35,6 @@ class CarRental:
         return date_obj
 
     def rent(self, customer_name, car_mileage_before, date_rented):
-        if CarRental.car_category_rented.get(self.car_category, True):
-            raise RentCarException(f'Car of {self.car_category} cannot be rented')
-
-        CarRental.car_category_rented[self.car_category] = True
         self.customer_name = customer_name
         self.car_mileage_before = car_mileage_before
         self.date_rented = date_rented
